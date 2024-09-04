@@ -1,0 +1,23 @@
+.header {
+  height: 20vh;
+  background-color: #152850;
+  background-size: cover;
+}
+.nav-bar {
+  display: flex;
+  justify-content: space-between;
+  margin: 15px;
+  padding: 20px;
+  align-items: center;
+}
+.logo {
+  height: 100px;
+  width: 100px;
+}
+.button {
+  height: 36px;
+  width: 108px;
+  background-color: transparent;
+  border-radius: 8px;
+  border: 2px solid #ffffff;
+}

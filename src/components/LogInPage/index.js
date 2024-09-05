@@ -1,5 +1,5 @@
 import {Component} from 'react'
-import {Link} from 'react-router-dom'
+import {Link, Redirect} from 'react-router-dom'
 import Cookies from 'js-cookie'
 import './index.css'
 
@@ -10,18 +10,17 @@ class LogInPage extends Component {
 
   updatePin = event => this.setState({pin: event.target.value})
 
-  submitForm = async event => {
-    event.preventDefault()
-
+  submitForm = async () => {
     const apiUrl = 'https://apis.ccbp.in/ebank/login'
     const {userId, pin} = this.state
-    const userDetails = {userId, pin}
+    const userDetails = {user_id: userId, pin}
     const options = {
       method: 'POST',
       body: JSON.stringify(userDetails),
     }
     const response = await fetch(apiUrl, options)
-    const data = response.json()
+    const data = await response.json()
+    console.log(response.ok)
     if (response.ok === true) {
       this.onSuccessView(data.jwt_token)
     } else {
@@ -40,17 +39,21 @@ class LogInPage extends Component {
   }
 
   render() {
+    const jwtToken = Cookies.get('jwt_token')
+    if (jwtToken !== undefined) {
+      return <Redirect to="/" />
+    }
     const {showErrMsg, errorMsg} = this.state
     return (
       <Link to="/ebank/login">
-        <div className="bg-container">
+        <form className="bg-container">
           <div className="login-container">
             <img
               className="login-img"
               alt="website login"
               src="https://assets.ccbp.in/frontend/react-js/ebank-login-img.png"
             />
-            <form className="login" onSubmit={this.submitForm}>
+            <div className="login">
               <h1 className="heading">Welcome Back!</h1>
               <label className="label" htmlFor="userId">
                 User ID
@@ -74,13 +77,17 @@ class LogInPage extends Component {
                 key="pin"
                 placeholder="Enter PIN"
               />
-              <button type="submit" className="button">
+              <button
+                type="submit"
+                className="button"
+                onClick={this.submitForm}
+              >
                 Login
               </button>
               {showErrMsg && <p className="error-message">*{errorMsg}</p>}
-            </form>
+            </div>
           </div>
-        </div>
+        </form>
       </Link>
     )
   }

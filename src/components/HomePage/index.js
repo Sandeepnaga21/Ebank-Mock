@@ -1,13 +1,18 @@
-import {Component} from 'react'
-import {Link} from 'react-router-dom'
+import {Link, Redirect} from 'react-router-dom'
+import Cookies from 'js-cookie'
 import HeaderPage from '../HeaderPage'
 import './index.css'
 
-class HomePage extends Component {
-  render() {
-    return (
+const HomePage = () => {
+  const jwtToken = Cookies.get('jwt_token')
+  if (jwtToken === undefined) {
+    return <Redirect to="/ebank/login" />
+  }
+
+  return (
+    <>
+      <HeaderPage />
       <Link to="/">
-        <HeaderPage />
         <div className="card-container">
           <h1 className="heading">Your Flexibility, Our Excellence</h1>
           <img
@@ -17,8 +22,8 @@ class HomePage extends Component {
           />
         </div>
       </Link>
-    )
-  }
+    </>
+  )
 }
 
 export default HomePage
